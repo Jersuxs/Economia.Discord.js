@@ -31,7 +31,7 @@ module.exports = {
     const razon = interaction.options.getString('razon');
     const aceptaIntereses = interaction.options.getBoolean('acepta_intereses');
 
-    const canalPrestamosId = '1276661757082992733';
+    const canalPrestamosId = 'ID DEL CANAL DONDE SE ENVIARA LA SOLICITUD DE PRESTAMO';
     const canalPrestamos = client.channels.cache.get(canalPrestamosId);
 
     if (!canalPrestamos) {
