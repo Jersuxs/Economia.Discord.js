@@ -136,7 +136,7 @@ function scheduleReminderMessages(client, userId, dineroConIntereses, fechaVenci
   for (let i = 3; i > 0; i--) {
     const avisoDate = new Date(fechaVencimiento.getTime() - i * 24 * 60 * 60 * 1000);
     schedule.scheduleJob(avisoDate, async function() {
-      const canalPrestamos = await client.channels.fetch('1276661757082992733');
+      const canalPrestamos = await client.channels.fetch('ID DEL CANAL DONDE SE ENVIARA CUANDO EXPIRE EL PRESTAMO');
       const user = await client.users.fetch(userId);
       await canalPrestamos.send(`El usuario ${user} le faltan ${i} días para que expire su préstamo.`);
     });
