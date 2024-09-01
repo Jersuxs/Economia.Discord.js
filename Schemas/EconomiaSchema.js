@@ -26,7 +26,15 @@ const economiaSchema = new mongoose.Schema({
   lastRob: { 
     type: Date,
     default: null
-  }
+  },
+  shopItems: [
+    {
+      name: String,
+      price: Number,
+      description: String,
+      roleId: String
+    }
+  ]
 });
 
 module.exports = mongoose.model('Economia', economiaSchema);
