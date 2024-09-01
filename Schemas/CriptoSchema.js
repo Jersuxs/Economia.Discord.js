@@ -24,6 +24,10 @@ const criptoSchema = new mongoose.Schema({
   ultimaActualizacion: {
     type: Date,
     default: Date.now
+  },
+  proximaActualizacion: {
+    type: Date,
+    default: () => new Date(Date.now() + 6 * 60 * 60 * 1000) // 6 horas después de la creación
   }
 });
 
