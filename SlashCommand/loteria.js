@@ -21,9 +21,6 @@ module.exports = {
   ],
 
   run: async (client, interaction) => {
-    // Verificar el rol del usuario
-    if (!interaction.member.roles.cache.has('1266070200399298674')) {
-      return interaction.reply({ content: 'No tienes permiso para usar este comando.', ephemeral: true });
     }
 
     const premio = interaction.options.getInteger('premio');
