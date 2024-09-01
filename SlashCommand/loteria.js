@@ -21,7 +21,6 @@ module.exports = {
   ],
 
   run: async (client, interaction) => {
-    }
 
     const premio = interaction.options.getInteger('premio');
     const canal = interaction.options.getChannel('canal');
