@@ -144,7 +144,7 @@ function scheduleReminderMessages(client, userId, dineroConIntereses, fechaVenci
 
   // Programar aviso de caducidad
   schedule.scheduleJob(fechaVencimiento, async function() {
-    const canalPrestamos = await client.channels.fetch('1276661757082992733');
+    const canalPrestamos = await client.channels.fetch('ID DEL CANAL DONDE SE ENVIARA CUANDO UN PRESTAMO NO SE A PAGADO EN EL MES');
     const user = await client.users.fetch(userId);
     await canalPrestamos.send(`<@1269244893855748211>, el préstamo de ${user} ha caducado.`);
   });
