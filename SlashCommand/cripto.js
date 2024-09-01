@@ -15,39 +15,44 @@ function actualizarPrecio(moneda, precioActual, precioMinimo, precioMaximo) {
   return nuevoPrecio;
 }
 
-// Programar la actualización de precios cada 6 horas
-const job = schedule.scheduleJob('0 */6 * * *', async function() {
+// Función para programar la actualización de precios
+async function programarActualizacion() {
   const usuarios = await Cripto.find();
   for (const usuario of usuarios) {
-    // RakanCoin
-    usuario.RakanCoin.precio = actualizarPrecio(
-      'RakanCoin',
-      usuario.RakanCoin.precio,
-      100,
-      1000
-    );
+    const tiempoRestante = usuario.proximaActualizacion - Date.now();
+    if (tiempoRestante > 0) {
+      schedule.scheduleJob(Date.now() + tiempoRestante, async function() {
+        usuario.RakanCoin.precio = actualizarPrecio(
+          'RakanCoin',
+          usuario.RakanCoin.precio,
+          100,
+          1000
+        );
 
-    // PimulaCoin
-    usuario.PimulaCoin.precio = actualizarPrecio(
-      'PimulaCoin',
-      usuario.PimulaCoin.precio,
-      1000,
-      7000
-    );
+        usuario.PimulaCoin.precio = actualizarPrecio(
+          'PimulaCoin',
+          usuario.PimulaCoin.precio,
+          1000,
+          7000
+        );
 
-    // FnCoin
-    usuario.FnCoin.precio = actualizarPrecio(
-      'FnCoin',
-      usuario.FnCoin.precio,
-      5000,
-      25000
-    );
+        usuario.FnCoin.precio = actualizarPrecio(
+          'FnCoin',
+          usuario.FnCoin.precio,
+          5000,
+          25000
+        );
 
-    usuario.ultimaActualizacion = Date.now();
-    await usuario.save();
+        usuario.ultimaActualizacion = Date.now();
+        usuario.proximaActualizacion = new Date(Date.now() + 6 * 60 * 60 * 1000); // 6 horas después de la actualización
+        await usuario.save();
+        console.log('Precios de criptomonedas actualizados');
+      });
+    }
   }
-  console.log('Precios de criptomonedas actualizados');
-});
+}
+
+programarActualizacion();
 
 module.exports = {
   name: 'cripto',
