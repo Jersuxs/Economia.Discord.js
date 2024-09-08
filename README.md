@@ -8,3 +8,5 @@ Ejemplos:
 
 ![Balance](https://github.com/user-attachments/assets/b7fd157d-0da8-49fb-b30f-4394d8a3db90)
 
+![Captura](https://github.com/user-attachments/assets/860effb7-95a1-4bf6-9edb-6a141c08b586)
+
