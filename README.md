@@ -1,7 +1,10 @@
-# Economía de Discord.js v14. Espero y les ayude
-Un pack de comandos de economía en discord.js v14, slashcommand y prefix
+<h1 align="center"> Economía discord.js v14 </h1>
 
-Si lo van a usar lo agradezco, soy nuevo por aqui programando.
+Un pack de economía para Discord, muy completo y funcional. Pueden escribirme al md de Discord si tienen algún error. "jersuxs"
 
+Ejemplos:
 
-Recuerden cambiar collect.js si lo van a usar.
+![El top](https://github.com/user-attachments/assets/99d8a5cf-01e1-4b6f-9c34-3edca5ffe6bc)
+
+![Balance](https://github.com/user-attachments/assets/b7fd157d-0da8-49fb-b30f-4394d8a3db90)
+
