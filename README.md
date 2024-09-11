@@ -2,6 +2,8 @@
 
 Un pack de economía para Discord, muy completo y funcional. Pueden escribirme al md de Discord si tienen algún error. "jersuxs"
 
+O pueden hacer un "Issue". Además cualquier sugerencia para poner, diganlo en mi md de Discord.
+
 Ejemplos:
 
 ![El top](https://github.com/user-attachments/assets/99d8a5cf-01e1-4b6f-9c34-3edca5ffe6bc)
