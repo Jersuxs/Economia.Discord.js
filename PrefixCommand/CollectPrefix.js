@@ -1,63 +1,74 @@
 const Discord = require("discord.js");
 const Economia = require("../Schemas/EconomiaSchema.js");
+const schedule = require('node-schedule');
 
 module.exports = {
   name: 'collect',
-  description: 'Recoge tu sueldo basado en tus roles',
-  
+  description: 'Recolecta tu salario basado en tus roles',
   async execute(message, args) {
-    const sueldos = {
-      "1255939586857763018": 1000,
-      "1258774859782029374": 6000,
-      "1266063375167787142": 8000,
-      "1266063395715551294": 8000,
-      "1258775241589526558": 6000,
-      "1269243741047226450": 20000
-    };
-
-    const weeklyRoleId = "1269243741047226450";
-    const weeklyInterval = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
-    const dailyInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
-
-    let usuario = await Economia.findOne({ guildId: message.guild.id, userId: message.author.id });
+    const member = message.member;
+    let usuario = await Economia.findOne({ guildId: message.guild.id, userId: member.id });
     if (!usuario) {
-      usuario = await Economia.create({ guildId: message.guild.id, userId: message.author.id, lastCollect: new Map() });
+      usuario = await Economia.create({ guildId: message.guild.id, userId: member.id, dinero: 0, banco: 0 });
     }
 
-    const now = Date.now();
-    let totalSueldo = 0;
-    let descripcion = "";
+    const rolesSalarios = [
+      { id: "ID DEL ROL", salario: 0 },
+      { id: "ID DEL ROL", salario: 0 },
+      { id: "ID DEL ROL", salario: 0 },
+      { id: "ID DEL ROL", salario: 0 },
+      { id: "ID DEL ROL", salario: 0 },
+      { id: "ID DEL ROL", salario: 0 } // Rol semanal
+    ];
 
-    for (const [rolId, sueldo] of Object.entries(sueldos)) {
-      if (message.member.roles.cache.has(rolId)) {
-        const lastCollectTime = usuario.lastCollect.get(rolId) || 0;
-        const interval = rolId === weeklyRoleId ? weeklyInterval : dailyInterval;
+    let totalGanado = 0;
+    const rolesActivos = [];
 
-        if (now - lastCollectTime >= interval) {
-          totalSueldo += sueldo;
-          usuario.lastCollect.set(rolId, now);
-          const rol = message.guild.roles.cache.get(rolId);
-          descripcion += `${rol.name} | <:moneda:1272983068675801123>${sueldo}\n`;
+    for (const roleSalario of rolesSalarios) {
+      if (member.roles.cache.has(roleSalario.id)) {
+        const lastCollect = usuario.lastCollect.get(roleSalario.id) || new Date(0);
+        const tiempoTranscurrido = new Date() - lastCollect;
+
+        let puedeColectar = false;
+        if (roleSalario.id === "ID ROL SEMANAL") { // Rol semanal
+          puedeColectar = tiempoTranscurrido >= 7 * 24 * 60 * 60 * 1000;
+        } else { // Roles de 24 horas
+          puedeColectar = tiempoTranscurrido >= 24 * 60 * 60 * 1000;
+        }
+
+        if (puedeColectar) {
+          totalGanado += roleSalario.salario;
+          rolesActivos.push({ nombre: member.guild.roles.cache.get(roleSalario.id).name, salario: roleSalario.salario });
+          usuario.lastCollect.set(roleSalario.id, new Date());
         }
       }
     }
 
-    if (totalSueldo === 0) {
-      return message.reply("No tienes roles que puedas cobrar en este momento.");
+    if (totalGanado > 0) {
+      usuario.dinero += totalGanado;
+      await usuario.save();
+
+      const embed = new Discord.EmbedBuilder()
+        .setAuthor({ name: message.author.username, iconURL: message.author.displayAvatarURL() })
+        .setDescription(rolesActivos.map(rol => `${rol.nombre} | ${rol.salario} monedas`).join('\n'))
+        .setColor(5814783);
+
+      await message.reply({ embeds: [embed] });
+    } else {
+      await message.reply({ content: "No tienes roles que te permitan recolectar en este momento o ya has recolectado recientemente.", ephemeral: true });
     }
-
-    await Economia.findOneAndUpdate(
-      { guildId: message.guild.id, userId: message.author.id },
-      { $inc: { dinero: totalSueldo }, $set: { lastCollect: usuario.lastCollect } },
-      { upsert: true }
-    );
-
-    const embed = new Discord.MessageEmbed()
-      .setAuthor(message.author.username, message.author.displayAvatarURL())
-      .setDescription(descripcion)
-      .setFooter(`Total recibido: <:moneda:1272983068675801123>${totalSueldo}`)
-      .setColor(5814783);
-
-    await message.channel.send({ embeds: [embed] });
   }
 };
+
+// Programar la tarea para resetear los tiempos de recolección cada 24 horas
+schedule.scheduleJob('0 0 * * *', async () => {
+  const usuarios = await Economia.find();
+  for (const usuario of usuarios) {
+    for (const [rolId, _] of usuario.lastCollect) {
+      if (rolId !== "ID DEL ROL SEMANAL") { // No resetear el rol semanal
+        usuario.lastCollect.set(rolId, new Date(0));
+      }
+    }
+    await usuario.save();
+  }
+});
