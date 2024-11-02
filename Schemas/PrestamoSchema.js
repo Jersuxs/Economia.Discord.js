@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const prestamoSchema = new mongoose.Schema({
+  guildId: { type: String, required: true },
   userId: { type: String, required: true },
   dinero: { type: Number, required: true },
   dineroConIntereses: { type: Number, required: true },

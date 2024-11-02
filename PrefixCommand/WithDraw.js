@@ -11,14 +11,14 @@ module.exports = {
       return message.reply("Por favor, proporciona una cantidad válida para retirar.");
     }
 
-    const usuario = await Economia.findOne({ userId: message.author.id });
+    const usuario = await Economia.findOne({ guildId: message.guild.id, userId: message.author.id });
 
     if (!usuario || usuario.banco < cantidad) {
       return message.reply("No tienes suficiente dinero en el banco para retirar esa cantidad.");
     }
 
     await Economia.findOneAndUpdate(
-      { userId: message.author.id },
+      { guildId: message.guild.id, userId: message.author.id },
       { $inc: { dinero: cantidad, banco: -cantidad } }
     );
 

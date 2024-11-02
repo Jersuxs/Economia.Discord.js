@@ -61,10 +61,11 @@ module.exports = {
     }
 
     try {
-      const tienda = await Economia.findOne({ userId: 'tienda' });
+      const tienda = await Economia.findOne({ guildId: interaction.guild.id, userId: 'tienda' });
 
       if (!tienda) {
         await Economia.create({
+          guildId: interaction.guild.id,
           userId: 'tienda',
           shopItems: [{
             name: nombre,

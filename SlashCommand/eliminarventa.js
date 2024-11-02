@@ -21,7 +21,7 @@ module.exports = {
     const nombreVenta = interaction.options.getString('nombre');
 
     try {
-      const tienda = await Economia.findOne({ userId: 'tienda' });
+      const tienda = await Economia.findOne({ guildId: interaction.guild.id, userId: 'tienda' });
 
       if (!tienda || !tienda.shopItems.some(item => item.name === nombreVenta)) {
         return interaction.reply('No se encontró una venta con ese nombre.');

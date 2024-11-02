@@ -30,7 +30,7 @@ module.exports = {
     const apuesta = interaction.options.getInteger('apuesta');
 
     // Verificar si el usuario tiene suficiente dinero
-    const usuario = await Economia.findOne({ userId: interaction.user.id });
+    const usuario = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
     if (!usuario || usuario.dinero < apuesta) {
       return interaction.reply({ content: "No tienes suficiente dinero para hacer esta apuesta.", ephemeral: true });
     }
@@ -53,9 +53,9 @@ module.exports = {
       let dineroGanado = 0;
       if (haGanado) {
         dineroGanado = apuesta;
-        await Economia.updateOne({ userId: interaction.user.id }, { $inc: { dinero: dineroGanado } });
+        await Economia.updateOne({ guildId: interaction.guild.id, userId: interaction.user.id }, { $inc: { dinero: dineroGanado } });
       } else {
-        await Economia.updateOne({ userId: interaction.user.id }, { $inc: { dinero: -apuesta } });
+        await Economia.updateOne({ guildId: interaction.guild.id, userId: interaction.user.id }, { $inc: { dinero: -apuesta } });
       }
 
       const embedResultado = new Discord.EmbedBuilder()

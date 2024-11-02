@@ -6,9 +6,9 @@ module.exports = {
   description: 'Trabaja para ganar dinero',
   
   async execute(message, args) {
-    let usuario = await Economia.findOne({ userId: message.author.id });
+    let usuario = await Economia.findOne({ guildId: message.guild.id, userId: message.author.id });
     if (!usuario) {
-      usuario = await Economia.create({ userId: message.author.id, dinero: 0, banco: 0, lastWork: 0 });
+      usuario = await Economia.create({ guildId: message.guild.id, userId: message.author.id, dinero: 0, banco: 0, lastWork: 0 });
     }
 
     const ahora = Date.now();
@@ -38,7 +38,7 @@ module.exports = {
     const trabajoElegido = trabajos[Math.floor(Math.random() * trabajos.length)].replace('{dinero}', dineroGanado);
 
     await Economia.findOneAndUpdate(
-      { userId: message.author.id },
+      { guildId: message.guild.id, userId: message.author.id },
       { $inc: { dinero: dineroGanado }, $set: { lastWork: ahora } },
       { upsert: true }
     );

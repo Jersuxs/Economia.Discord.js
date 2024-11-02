@@ -17,13 +17,18 @@ module.exports = {
   run: async (client, interaction) => {
     const usuarioObjetivo = interaction.options.getUser('usuario') || interaction.user;
 
-    const usuario = await Economia.findOne({ userId: usuarioObjetivo.id });
+    const usuario = await Economia.findOne({ guildId: interaction.guild.id, userId: usuarioObjetivo.id });
     if (!usuario) {
-      await Economia.create({ userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
+      await Economia.create({ guildId: interaction.guild.id, userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
     }
 
     const dineroTotal = (usuario?.dinero || 0) + (usuario?.banco || 0);
-    const posicion = await Economia.countDocuments({ $expr: { $gt: [{ $add: ['$dinero', '$banco'] }, dineroTotal] } }) + 1;
+    const posicion = await Economia.countDocuments({ 
+      guildId: interaction.guild.id, 
+      $expr: { 
+          $gt: [{ $add: ['$dinero', '$banco'] }, dineroTotal] 
+      } 
+  }) + 1;
 
     const embed = new Discord.EmbedBuilder()
       .setAuthor({ name: usuarioObjetivo.username, iconURL: usuarioObjetivo.displayAvatarURL() })

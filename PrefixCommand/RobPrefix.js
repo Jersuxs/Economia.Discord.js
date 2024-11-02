@@ -10,8 +10,8 @@ module.exports = {
       return message.reply('Por favor, menciona a un usuario al que quieras robar.');
     }
 
-    const ladron = await Economia.findOne({ userId: message.author.id });
-    const victima = await Economia.findOne({ userId: usuarioObjetivo.id });
+    const ladron = await Economia.findOne({ guildId: message.guild.id, userId: message.author.id });
+    const victima = await Economia.findOne({ guildId: message.guild.id, userId: usuarioObjetivo.id });
 
     const now = Date.now();
 
@@ -33,7 +33,7 @@ module.exports = {
 
     victima.dinero -= cantidadRobada;
     if (!ladron) {
-      await Economia.create({ userId: message.author.id, dinero: cantidadRobada, banco: 0, lastRob: now });
+      await Economia.create({ guildId: message.guild.id, userId: message.author.id, dinero: cantidadRobada, banco: 0, lastRob: now });
     } else {
       ladron.dinero += cantidadRobada;
       ladron.lastRob = now;

@@ -7,7 +7,7 @@ module.exports = {
   type: Discord.ApplicationCommandType.ChatInput,
   options: [],
   run: async (client, interaction) => {
-    const tienda = await Economia.findOne({ userId: 'tienda' });
+    const tienda = await Economia.findOne({ guildId: interaction.guild.id, userId: 'tienda' });
     
     const embed = new Discord.EmbedBuilder()
       .setAuthor({ 

@@ -8,9 +8,9 @@ module.exports = {
   type: Discord.ApplicationCommandType.ChatInput,
 
   run: async (client, interaction) => {
-    const usuario = await Economia.findOne({ userId: interaction.user.id });
+    const usuario = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
     if (!usuario) {
-      await Economia.create({ userId: interaction.user.id, dinero: 0, banco: 0, lastWork: 0 });
+      await Economia.create({ guildId: interaction.guild.id, userId: interaction.user.id, dinero: 0, banco: 0, lastWork: 0 });
     }
 
     const ahora = Date.now();
@@ -40,7 +40,7 @@ module.exports = {
     const trabajoElegido = trabajos[Math.floor(Math.random() * trabajos.length)].replace('{dinero}', dineroGanado);
 
     await Economia.findOneAndUpdate(
-      { userId: interaction.user.id },
+      { guildId: interaction.guild.id, userId: interaction.user.id },
       { $inc: { dinero: dineroGanado }, $set: { lastWork: ahora } },
       { upsert: true }
     );

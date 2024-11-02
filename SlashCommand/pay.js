@@ -32,9 +32,9 @@ module.exports = {
       return interaction.reply({ content: "La cantidad debe ser mayor que 0.", ephemeral: true });
     }
 
-    let usuarioPagador = await Economia.findOne({ userId: interaction.user.id });
+    let usuarioPagador = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
     if (!usuarioPagador) {
-      usuarioPagador = await Economia.create({ userId: interaction.user.id, dinero: 0, banco: 0 });
+      usuarioPagador = await Economia.create({ guildId: interaction.guild.id, userId: interaction.user.id, dinero: 0, banco: 0 });
     }
 
     const dineroTotalPagador = usuarioPagador.dinero + usuarioPagador.banco;
@@ -43,9 +43,9 @@ module.exports = {
       return interaction.reply({ content: "No tienes suficiente dinero para realizar este pago.", ephemeral: true });
     }
 
-    let usuarioReceptor = await Economia.findOne({ userId: usuarioObjetivo.id });
+    let usuarioReceptor = await Economia.findOne({ guildId: interaction.guild.id, userId: usuarioObjetivo.id });
     if (!usuarioReceptor) {
-      usuarioReceptor = await Economia.create({ userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
+      usuarioReceptor = await Economia.create({ guildId: interaction.guild.id, userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
     }
 
     // Realizar la transacción
