@@ -8,13 +8,18 @@ module.exports = {
   async execute(message, args) {
     const usuarioObjetivo = message.mentions.users.first() || message.author;
 
-    let usuario = await Economia.findOne({ userId: usuarioObjetivo.id });
+    let usuario = await Economia.findOne({ guildId: message.guild.id, userId: usuarioObjetivo.id });
     if (!usuario) {
-      usuario = await Economia.create({ userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
+      usuario = await Economia.create({ guildId: message.guild.id, userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
     }
 
     const dineroTotal = (usuario.dinero || 0) + (usuario.banco || 0);
-    const posicion = await Economia.countDocuments({ $expr: { $gt: [{ $add: ['$dinero', '$banco'] }, dineroTotal] } }) + 1;
+    const posicion = await Economia.countDocuments({ 
+      guildId: message.guild.id, 
+      $expr: { 
+          $gt: [{ $add: ['$dinero', '$banco'] }, dineroTotal] 
+      } 
+  }) + 1;
 
     const embed = new Discord.EmbedBuilder()
       .setAuthor({ name: usuarioObjetivo.username, iconURL: usuarioObjetivo.displayAvatarURL() })

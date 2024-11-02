@@ -17,14 +17,14 @@ module.exports = {
 
   run: async (client, interaction) => {
     const cantidad = interaction.options.getInteger('cantidad');
-    const usuario = await Economia.findOne({ userId: interaction.user.id });
+    const usuario = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
 
     if (!usuario || usuario.dinero < cantidad) {
       return interaction.reply("No tienes suficiente dinero para depositar esa cantidad.");
     }
 
     await Economia.findOneAndUpdate(
-      { userId: interaction.user.id },
+      { guildId: interaction.guild.id, userId: interaction.user.id },
       { $inc: { dinero: -cantidad, banco: cantidad } }
     );
 

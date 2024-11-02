@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
 const economiaSchema = new mongoose.Schema({
+  guildId: {
+    type: String,
+    required: true
+  },
   userId: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   dinero: {
     type: Number,

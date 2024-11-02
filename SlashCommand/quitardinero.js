@@ -32,10 +32,10 @@ module.exports = {
       return interaction.reply({ content: "La cantidad debe ser mayor que 0.", ephemeral: true });
     }
 
-    const usuarioEconomia = await Economia.findOne({ userId: usuarioObjetivo.id });
+    const usuarioEconomia = await Economia.findOne({ guildId: interaction.guild.id, userId: usuarioObjetivo.id });
 
     if (!usuarioEconomia) {
-      await Economia.create({ userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
+      await Economia.create({ guildId: interaction.guild.id, userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
       return interaction.reply({ content: "Este usuario no tiene dinero para quitar.", ephemeral: true });
     }
 

@@ -10,6 +10,12 @@ module.exports = {
   run: async (client, interaction) => {
     const top10 = await Economia.aggregate([
       {
+        $match: {
+          guildId: interaction.guild.id,
+          userId: { $ne: "tienda"}
+        }
+      },
+      {
         $addFields: {
           total: { $add: ["$dinero", "$banco"] }
         }

@@ -47,7 +47,7 @@ module.exports = {
     const participantes = new Set();
 
     collector.on('collect', async (reaction, user) => {
-      const economiaUsuario = await Economia.findOne({ userId: user.id });
+      const economiaUsuario = await Economia.findOne({ guildId: interaction.guild.id, userId: user.id });
       if (!economiaUsuario || economiaUsuario.dinero < 100) {
         user.send('No tienes suficiente dinero para participar en la lotería.');
         reaction.users.remove(user);
@@ -61,7 +61,7 @@ module.exports = {
 
     collector.on('remove', async (reaction, user) => {
       if (participantes.has(user.id)) {
-        const economiaUsuario = await Economia.findOne({ userId: user.id });
+        const economiaUsuario = await Economia.findOne({ guildId: interaction.guild.id, userId: user.id });
         economiaUsuario.dinero += 100;
         await economiaUsuario.save();
         participantes.delete(user.id);
@@ -77,7 +77,7 @@ module.exports = {
       const ganadorId = Array.from(participantes)[Math.floor(Math.random() * participantes.size)];
       const ganador = await interaction.client.users.fetch(ganadorId);
 
-      const economiaGanador = await Economia.findOne({ userId: ganadorId });
+      const economiaGanador = await Economia.findOne({ guildId: interaction.guild.id, userId: ganadorId });
       economiaGanador.dinero += premio;
       await economiaGanador.save();
 

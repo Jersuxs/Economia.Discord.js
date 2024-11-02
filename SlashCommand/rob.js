@@ -15,8 +15,8 @@ module.exports = {
   ],
   run: async (client, interaction) => {
     const usuarioObjetivo = interaction.options.getUser('usuario');
-    const ladron = await Economia.findOne({ userId: interaction.user.id });
-    const victima = await Economia.findOne({ userId: usuarioObjetivo.id });
+    const ladron = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
+    const victima = await Economia.findOne({ guildId: interaction.guild.id, userId: usuarioObjetivo.id });
 
     const now = Date.now();
 
@@ -26,7 +26,7 @@ module.exports = {
     }
 
     if (!victima) {
-      await Economia.create({ userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
+      await Economia.create({ guildId: interaction.guild.id, userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
       return interaction.reply({ content: "Este usuario no tiene dinero para robar.", ephemeral: true });
     }
 
@@ -38,7 +38,7 @@ module.exports = {
 
     victima.dinero -= cantidadRobada;
     if (!ladron) {
-      await Economia.create({ userId: interaction.user.id, dinero: cantidadRobada, banco: 0, lastRob: now });
+      await Economia.create({ guildId: interaction.guild.id, userId: interaction.user.id, dinero: cantidadRobada, banco: 0, lastRob: now });
     } else {
       ladron.dinero += cantidadRobada;
       ladron.lastRob = now;

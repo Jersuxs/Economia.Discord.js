@@ -30,7 +30,7 @@ module.exports = {
     const cantidad = interaction.options.getInteger('cantidad');
 
     await Economia.findOneAndUpdate(
-      { userId: usuario.id },
+      { guildId: interaction.guild.id, userId: usuario.id },
       { $inc: { banco: cantidad } },
       { upsert: true }
     );

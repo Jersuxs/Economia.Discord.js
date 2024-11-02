@@ -21,9 +21,9 @@ module.exports = {
     const weeklyInterval = 7 * 24 * 60 * 60 * 1000; // 1 week in milliseconds
     const dailyInterval = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-    let usuario = await Economia.findOne({ userId: interaction.user.id });
+    let usuario = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
     if (!usuario) {
-      usuario = await Economia.create({ userId: interaction.user.id, lastCollect: new Map() });
+      usuario = await Economia.create({ guildId: interaction.guild.id, userId: interaction.user.id, lastCollect: new Map() });
     }
 
     const now = Date.now();
@@ -49,7 +49,7 @@ module.exports = {
     }
 
     await Economia.findOneAndUpdate(
-      { userId: interaction.user.id },
+      { guildId: interaction.guild.id, userId: interaction.user.id },
       { $inc: { dinero: totalSueldo }, $set: { lastCollect: usuario.lastCollect } },
       { upsert: true }
     );

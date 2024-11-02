@@ -1,10 +1,13 @@
 const mongoose = require('mongoose');
 
 const criptoSchema = new mongoose.Schema({
+  guildId: {
+    type: String,
+    required: true
+  },
   userId: {
     type: String,
     required: true,
-    unique: true
   },
   RakanCoin: {
     cantidad: { type: Number, default: 0 },

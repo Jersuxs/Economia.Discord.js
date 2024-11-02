@@ -21,9 +21,9 @@ module.exports = {
       return message.reply("La cantidad debe ser mayor que 0.");
     }
 
-    let usuarioPagador = await Economia.findOne({ userId: message.author.id });
+    let usuarioPagador = await Economia.findOne({ guildId: message.guild.id, userId: message.author.id });
     if (!usuarioPagador) {
-      usuarioPagador = await Economia.create({ userId: message.author.id, dinero: 0, banco: 0 });
+      usuarioPagador = await Economia.create({ guildId: message.guild.id, userId: message.author.id, dinero: 0, banco: 0 });
     }
 
     const dineroTotalPagador = usuarioPagador.dinero + usuarioPagador.banco;
@@ -32,9 +32,9 @@ module.exports = {
       return message.reply("No tienes suficiente dinero para realizar este pago.");
     }
 
-    let usuarioReceptor = await Economia.findOne({ userId: usuarioObjetivo.id });
+    let usuarioReceptor = await Economia.findOne({ guildId: message.guild.id, userId: usuarioObjetivo.id });
     if (!usuarioReceptor) {
-      usuarioReceptor = await Economia.create({ userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
+      usuarioReceptor = await Economia.create({ guildId: message.guild.id, userId: usuarioObjetivo.id, dinero: 0, banco: 0 });
     }
 
     // Realizar la transacción

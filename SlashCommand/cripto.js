@@ -132,14 +132,14 @@ module.exports = {
     const moneda = interaction.options.getString('moneda');
     const cantidad = interaction.options.getInteger('cantidad');
 
-    let usuario = await Cripto.findOne({ userId: interaction.user.id });
+    let usuario = await Cripto.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
     if (!usuario) {
-      usuario = await Cripto.create({ userId: interaction.user.id });
+      usuario = await Cripto.create({ guildId: interaction.guild.id, userId: interaction.user.id });
     }
 
-    let economia = await Economia.findOne({ userId: interaction.user.id });
+    let economia = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
     if (!economia) {
-      economia = await Economia.create({ userId: interaction.user.id });
+      economia = await Economia.create({ guildId: interaction.guild.id, userId: interaction.user.id });
     }
 
     switch (subcommand) {

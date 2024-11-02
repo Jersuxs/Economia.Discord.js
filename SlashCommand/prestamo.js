@@ -91,6 +91,7 @@ Tiene un plazo para pagar hasta: <t:${Math.floor(fechaVencimiento.getTime() / 10
     }
 
     const nuevoPrestamo = new Prestamo({
+      guildId: interaction.guild.id,
       userId: requester.id,
       dinero: parseFloat(dinero),
       dineroConIntereses: dineroConIntereses,

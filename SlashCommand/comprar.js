@@ -16,12 +16,12 @@ module.exports = {
   run: async (client, interaction) => {
     const objetoNombre = interaction.options.getString('objeto');
     
-    let usuario = await Economia.findOne({ userId: interaction.user.id });
+    let usuario = await Economia.findOne({ guildId: interaction.guild.id, userId: interaction.user.id });
     if (!usuario) {
-      usuario = await Economia.create({ userId: interaction.user.id, dinero: 0, banco: 0 });
+      usuario = await Economia.create({ guildId: interaction.guild.id, userId: interaction.user.id, dinero: 0, banco: 0 });
     }
 
-    const tienda = await Economia.findOne({ userId: 'tienda' });
+    const tienda = await Economia.findOne({ guildId: interaction.guild.id, userId: 'tienda' });
 
     if (!tienda || !tienda.shopItems.some(item => item.name === objetoNombre)) {
       return interaction.reply('Este objeto no existe en la tienda.');
